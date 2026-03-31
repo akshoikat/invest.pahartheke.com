@@ -26,7 +26,7 @@
   @yield('content')
 </div>
 <!-- footer start-->
-@include('frontend.partials.footer')
+<!-- @include('frontend.partials.footer') -->
 <!-- footer end-->
 
 

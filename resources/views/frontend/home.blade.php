@@ -103,101 +103,119 @@
     @endforeach
 </div>
 
-  <div class="flex items-center justify-center w-full max-w-full mb-8 space-x-4">
+<!-- new slider section -->
+<div class="flex items-center justify-center w-full max-w-full mb-8 space-x-4">
     <hr class="border-gray-300 flex-grow" />
-    <h3 class="text-[#2e2e5c] font-extrabold text-xl text-center whitespace-nowrap">
+    <h3 class="text-[#2e2e5c] font-extrabold text-2xl text-center whitespace-nowrap">
         Choose <span class="text-[#4b2e5e]">Your</span> <span id="plan">Investment Plan</span>
     </h3>
     <hr class="border-gray-300 flex-grow" />
 </div>
 
-<div class="w-full max-w-[1222px] mx-auto space-y-6" style="margin-top: 25px;">
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<div class="w-full max-w-[1222px] mx-auto mt-6">
+    <p class="text-center text-gray-600 mb-6">
+        Explore our investment plans below. Hover over a card to pause scrolling and view details.
+    </p>
 
-    @foreach($plans as $plan)
-<div x-data="{ open: false }" class="relative">
-    <div class="bg-[#F7F7F7] px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-            <h2 class="font-extrabold text-[18px] leading-[22px] text-[#0A0A0A]">
-                {{ $plan->title }}
-            </h2>
-            @if ($plan->short_description)
-            <p class="text-[#6B6B6B] text-[14px] leading-[18px] mt-1">
-                {!! nl2br(e($plan->short_description)) !!}
-            </p>
-            @endif
-            @if ($plan->details)
-            <p class="text-[#6B6B6B] text-[14px] leading-[18px]">
-                {!! nl2br(e(Str::limit($plan->details, 100))) !!}
-            </p>
-            @endif
-        </div>
+    <!-- Continuous Marquee -->
+    <div class="overflow-hidden relative">
+        <div x-data @mouseenter="$el.querySelector('.marquee').style.animationPlayState='paused'"
+             @mouseleave="$el.querySelector('.marquee').style.animationPlayState='running'"
+             class="marquee flex gap-6 animate-marquee">
+            
+            @foreach($plans as $plan)
+<div x-data="{ open: false }"
+     class="min-w-[250px] h-[400px] bg-cover bg-center rounded-lg flex-shrink-0 hover:shadow-lg transition-all cursor-pointer"
+     style="background-image: url('{{ asset('image/demo2.jpeg') }}');">
+    
+    <div class="h-full w-full flex flex-col justify-end bg-gradient-to-t from-black/40 to-transparent p-4 rounded-lg">
+        <h2 class="font-bold text-lg text-white text-center">{{ $plan->title }}</h2>
+        @if ($plan->short_description)
+            <p class="text-gray-200 text-sm text-center mt-1">{!! nl2br(e($plan->short_description)) !!}</p>
+        @endif
 
         <button @click="open = true"
-            class="mt-4 md:mt-0 bg-[#16819B] text-white text-[13px] font-semibold rounded-full px-6 py-2 flex items-center space-x-2 hover:bg-[#12677f]"
-            type="button">
-            <i class="fas fa-mouse-pointer"></i>
-            <span>{{ $plan->button_text ?? 'View Details' }}</span>
+                class="mt-4 bg-[#16819B] text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-[#12677f] flex items-center justify-center w-full">
+            View Details
         </button>
     </div>
 
     <!-- Modal -->
-      <div x-show="open"
-        x-transition
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        style="display: none;">
-        <div @click.away="open = false" class="bg-white  w-full p-6 rounded-lg shadow-xl overflow-auto" style="max-height: 90vh; width:750px">
-            <h2 class="text-xl font-bold mb-4 text-[#0A0A0A]">{{ $plan->title }}</h2>
+    <div x-show="open" x-transition
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+         style="display: none;">
+        <div @click.away="open = false"
+             class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-xl overflow-auto max-h-[90vh]">
+            
+            <h2 class="text-xl font-bold mb-4">{{ $plan->title }}</h2>
 
             <!-- Images -->
             <div class="space-y-4 mb-4">
-                @if ($plan->image_1)
-                    <img src="{{ asset('storage/' . $plan->image_1) }}" alt="Image 1" class="w-full rounded" style="height: 400px; object-fit: cover;">
+                @if($plan->image_1)
+                    <img src="{{ asset('storage/' . $plan->image_1) }}" class="w-full rounded h-64 object-cover" />
                 @endif
-                @if ($plan->image_2)
-                    <img src="{{ asset('storage/' . $plan->image_2) }}" alt="Image 2" class="w-full rounded" style="height: 400px; object-fit: cover;">
+                @if($plan->image_2)
+                    <img src="{{ asset('storage/' . $plan->image_2) }}" class="w-full rounded h-64 object-cover" />
                 @endif
-                @if ($plan->image_3)
-                    <img src="{{ asset('storage/' . $plan->image_3) }}" alt="Image 3" class="w-full rounded" style="height: 400px; object-fit: cover;">
+                @if($plan->image_3)
+                    <img src="{{ asset('storage/' . $plan->image_3) }}" class="w-full rounded h-64 object-cover" />
                 @endif
             </div>
 
-            <div class="text-[#6B6B6B] text-sm leading-6">
-                @if ($plan->short_description)
-                    <p class="mb-2">{!! nl2br(e($plan->short_description)) !!}</p>
-                @endif
-                @if ($plan->details)
+            <div class="text-gray-700 text-sm leading-6">
+                @if($plan->details)
                     <p>{!! nl2br(e($plan->details)) !!}</p>
                 @endif
             </div>
 
             @if($plan->apply_link)
-                <div class="mt-6 flex justify-center">
-                    <a href="{{ $plan->apply_link }}" target="_blank"
-                      class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-semibold">
-                        {{ $plan->button_apply ?? 'Apply Now' }}
-                    </a>
-                </div>
+            <div class="mt-6 flex justify-center">
+                <a href="{{ $plan->apply_link }}" target="_blank"
+                   class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-semibold">
+                    Apply Now
+                </a>
+            </div>
             @endif
 
             <div class="mt-6 text-right">
                 <button @click="open = false"
-                    class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Close</button>
+                        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Close</button>
             </div>
         </div>
     </div>
 
 </div>
-@endforeach
+            @endforeach
 
+            <!-- Duplicate for infinite loop effect -->
+            @foreach($plans as $plan)
+            <div class="min-w-[250px] bg-[#F7F7F7] rounded-lg p-4 flex-shrink-0 hover:shadow-lg transition-all cursor-pointer">
+                <h2 class="font-bold text-lg text-center text-[#0A0A0A]">{{ $plan->title }}</h2>
+                @if ($plan->short_description)
+                    <p class="text-gray-600 text-sm text-center mt-1">{!! nl2br(e($plan->short_description)) !!}</p>
+                @endif
+            </div>
+            @endforeach
 
-    @if($plans->isEmpty())
-    <div class="text-center text-gray-500 py-4">No investment plans found.</div>
-    @endif
+        </div>
+    </div>
 </div>
 
+<style>
+/* Marquee animation */
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
 
-</sevtion>
+.animate-marquee {
+    display: flex;
+    animation: marquee 10s linear infinite;
+}
+</style>
+
+
+</section>
  <section class="w-full max-w-[1222px] mx-auto pt-20 rounded-t-lg overflow-hidden">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 3" width="100%" height="3vw" preserveAspectRatio="none">
 <path  d="M100,0v0.8c-0.7,0-0.7,0.6-1.4,0.6c-0.7,0-0.7-0.6-1.5-0.6c-0.7,0-0.7,0.6-1.5,0.6c-0.7,0-0.7-0.6-1.5-0.6
